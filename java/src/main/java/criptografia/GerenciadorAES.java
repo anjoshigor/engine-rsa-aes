@@ -3,6 +3,7 @@ package criptografia;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class GerenciadorAES {
@@ -17,9 +18,10 @@ public class GerenciadorAES {
           
           try {
                
-               Cipher cipher = Cipher.getInstance("AES");
-               
-               cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+               Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+               byte[] iv = new byte[16];
+               IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+               cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec);
                
                return cipher.doFinal(informacao);
                
@@ -36,10 +38,12 @@ public class GerenciadorAES {
      public byte[] decriptografar(byte[] informacaoCriptografada, SecretKey secretKey) {
           
           try {
+
+               Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+               byte[] iv = new byte[16];
+               IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+               cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
                
-               Cipher cipher = Cipher.getInstance("AES");
-               
-               cipher.init(Cipher.DECRYPT_MODE, secretKey);
                
                return cipher.doFinal(informacaoCriptografada);
                
